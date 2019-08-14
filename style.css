@@ -1,0 +1,61 @@
+.username {
+  font-size: 15px;
+}
+
+.logout {
+  font-size: 14px;
+}
+
+.profile-photo {
+  max-width: 130px;
+  margin: auto;
+  display: block;
+}
+
+.profile-photo-container {
+  position: relative;
+  display: inline-block;
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+.profile-photo-container .update-photo {
+  position: absolute;
+  bottom: 0px;
+  font-size: 14px;
+  text-align: center;
+  left: 0;
+  right: 0;
+  background: rgba(0,0,0,0.6);
+  padding: 2px 0 8px;
+  color: #fff;
+  transition: 0.2s;
+  visibility: hidden;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.profile-photo-container:hover .update-photo {
+  visibility: visible;
+  opacity: 1;
+}
+
+.profile-photo-container .update-photo label {
+  width: 100%;
+  margin: 0;
+  cursor: pointer;
+}
+
+.profile-photo-container .update-photo label input {
+  position: absolute;
+  left: 0;
+  right: 0;
+  opacity: 0;
+  width: 100%;
+  cursor: pointer;
+}
+
+.show-pass {
+  font-size: 13px;
+  cursor: pointer;
+}
