@@ -10,31 +10,9 @@ if (empty($_SESSION['logged_in'])) {
 
 <div class="container py-5">
   <div class="row justify-content-center">
-    <div class="col-12 text-center">
-      <?php
-
-      // if ($_SESSION['user_exists']) {
-      //   if ($_SESSION['password'] == true) {
-      //     if ($_SESSION['user'] != null) {
-      //       echo "Hi " . $_SESSION['user'] . '!';
-      //     }
-      //   } else {
-      //     echo "Wrong password. Please <a href='/php/admin'>try again or reset your password.</a>";
-      //   }
-      // } else {
-      //   echo "User does not exist. Please <a href='/php/admin'>register</a>";
-      // }
-
-      ?>
-    </div>
-  </div>
-</div>
-
-<div class="container py-5">
-  <div class="row justify-content-center">
     <div class="col-12 col-md-6 col-lg-4">
       <?php
-      include 'db.php';
+      include 'functions/db.php';
       $conn = dbConnection();
 
       // vars

@@ -1,8 +1,7 @@
 <?php
-
 session_start();
 
-if (!empty($_SESSION['logged_in'])) {
+if (!empty($_SESSION['logged_in']) && $_SESSION['logged_in'] == true) {
 	header('Location: account.php');
 }
 
@@ -111,7 +110,7 @@ if (isset($_GET['action'])) {
 
 			<?php
 			if (!empty($_POST)) {
-				include 'db.php';
+				include 'functions/db.php';
 				$conn = dbConnection();
 
 				// vars
@@ -136,7 +135,7 @@ if (isset($_GET['action'])) {
 				// Login with username/email and password
 				function login() {
 					if (!empty($_SESSION['username']) && !empty($_SESSION['password'])) {
-						$query = "select Password from User where (Username='" . $_SESSION['username'] . "' OR Email='" . $_SESSION['username'] . "')";
+						$query = "select Password,Verified from User where (Username='" . $_SESSION['username'] . "' OR Email='" . $_SESSION['username'] . "')";
 						$result = $GLOBALS['conn']->query($query);
 
 						// If user exists in database
@@ -149,7 +148,16 @@ if (isset($_GET['action'])) {
 									$_SESSION['password_validation'] = true;
                   $_SESSION['logged_in'] = true;
 
-									echo "<script> window.location.href='account.php' </script>";
+									if ($row['Verified'] == 1) {
+										$_SESSION['verified_user'] = true;
+										echo "<script> window.location.href='account.php' </script>";
+									} else {
+										$_SESSION['verified_user'] = false;
+
+										echo "User is not verified. Please verify your account. <br>";
+										echo "<a href=''>Sent verification email.</a>";
+									}
+
 								} else {
                   $_SESSION['logged_in'] = false;
 									$_SESSION['password_validation'] = false;
