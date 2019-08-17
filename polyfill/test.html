@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+  <head>
+
+    <link rel="stylesheet" href="html5-simple-date-input-polyfill.css" />
+
+  </head>
+  <body>
+
+    normal:
+    <input type="date" />
+
+    with value:
+    <input type="date" value="2015-03-28" />
+
+    dynamically created:
+    <script>
+      setTimeout(function(){
+        var input = document.createElement("input");
+        input.type = "date";
+        document.body.appendChild(input);
+      }, 2000);
+    </script>
+
+    <script src="html5-simple-date-input-polyfill.min.js"></script>
+
+  </body>
+</html>

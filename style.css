@@ -6,20 +6,25 @@
   font-size: 14px;
 }
 
-.profile-photo {
+/* .profile-photo {
   max-width: 130px;
   margin: auto;
   display: block;
-}
+} */
 
-.profile-photo-container {
+.profile-photo {
   position: relative;
   display: inline-block;
   border-radius: 50%;
   overflow: hidden;
+  width: 130px;
+  height: 130px;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 }
 
-.profile-photo-container .update-photo {
+.profile-photo .update-photo {
   position: absolute;
   bottom: 0px;
   font-size: 14px;
@@ -29,24 +34,24 @@
   background: rgba(0,0,0,0.6);
   padding: 2px 0 8px;
   color: #fff;
-  transition: 0.2s;
+  transition: opacity 0.2s;
   visibility: hidden;
   opacity: 0;
   cursor: pointer;
 }
 
-.profile-photo-container:hover .update-photo {
+.profile-photo:hover .update-photo {
   visibility: visible;
   opacity: 1;
 }
 
-.profile-photo-container .update-photo label {
+.profile-photo .update-photo label {
   width: 100%;
   margin: 0;
   cursor: pointer;
 }
 
-.profile-photo-container .update-photo label input {
+.profile-photo .update-photo label input {
   position: absolute;
   left: 0;
   right: 0;

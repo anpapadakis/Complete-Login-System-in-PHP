@@ -16,29 +16,30 @@ if (!empty($_SESSION['logged_in']) && $_SESSION['logged_in'] == true) {
           include_once 'functions/db.php';
           $conn = dbConnection();
 
+					// Check connection
+					if ($conn->connect_error) {
+						die("Connection failed: " . $conn->connect_error);
+					}
+
+					// If not verified, send verification email
           if (isset($_GET['action']) && $_GET['action'] == "sendVerificationEmail") {
-            if (isset($_GET['email'])) {
-              $email = $_GET['email'];
+            if (isset($_GET['user'])) {
+              $user = $_GET['user'];
 
-              // Check connection
-      				if ($conn->connect_error) {
-      					die("Connection failed: " . $conn->connect_error);
-      				}
-
-              $stmt = $GLOBALS['conn']->prepare("select VerificationCode from User where Email=?");
-              $stmt->bind_param("s",$email);
+              $stmt = $GLOBALS['conn']->prepare("select Email,VerificationCode from User where Username=? or Email=?");
+              $stmt->bind_param("ss",$user,$user);
 
               if($stmt->execute()) {
                 $stmt->store_result();
 
                 if ($stmt->num_rows > 0) {
-                  $stmt->bind_result($VerificationCode);
+                  $stmt->bind_result($Email,$VerificationCode);
                   $stmt->fetch();
 
                   include_once 'functions/email.php';
-                  sendVerificationEmail($email,$VerificationCode);
+                  sendVerificationEmail($Email,$VerificationCode);
                 } else {
-                  echo "Email " . $email . " does not exist.";
+                  echo "User " . $user . " does not exist.";
                 }
               } else {
                 echo "Error in select query: <i>" . $stmt->error . "</i>";
@@ -49,14 +50,10 @@ if (!empty($_SESSION['logged_in']) && $_SESSION['logged_in'] == true) {
             exit();
           }
 
+					// Send verification email after register
           if (isset($_GET['email']) && !empty($_GET['email']) && isset($_GET['hash']) && !empty($_GET['hash'])) {
             $email = $_GET['email'];
             $hash = $_GET['hash'];
-
-            // Check connection
-    				if ($conn->connect_error) {
-    					die("Connection failed: " . $conn->connect_error);
-    				}
 
             function userVerified($email) {
               $stmt = $GLOBALS['conn']->prepare("select Verified from User where Email = ?");
@@ -84,25 +81,6 @@ if (!empty($_SESSION['logged_in']) && $_SESSION['logged_in'] == true) {
   							echo "Error in sql query: <i>" . $stmt->error . "</i>";
   						}
 
-              // if($stmt->execute()) {
-  						// 	$stmt->store_result();
-              //
-  						// 	if($stmt->affected_rows > 0) {
-              //     echo $row['Verified'];
-              //     if ($row['Verified'] == 0) {
-              //       $verified = false;
-              //       echo "false";
-              //     } else {
-              //       echo "true";
-              //       $verified = true;
-              //     }
-              //
-              //     return $verified;
-  						// 	}
-              //
-  						// } else {
-  						// 	echo "Error in sql query: <i>" . $stmt->error . "</i>";
-  						// }
               $stmt->close();
             }
 
@@ -147,11 +125,9 @@ if (!empty($_SESSION['logged_in']) && $_SESSION['logged_in'] == true) {
               }
 
             } else {
-              echo "<p>The email <b>" . $email . "</b> does not exist in our database.</p>";
+              echo "<p>The email <b>" . $email . "</b> does not exist in the database.</p>";
               echo "<p>Please <a href='index.php'>register</a>.</p>";
             }
-
-
 
             $conn->close();
 

@@ -15,16 +15,19 @@ if (empty($_SESSION['logged_in'])) {
       include 'functions/db.php';
       $conn = dbConnection();
 
-      // vars
-      $username = $_SESSION['username'];
-      $password = $_SESSION['password'];
-
-      // Check connection
+			// Check connection
       if ($conn->connect_error) {
         die("Connection failed: " . $conn->connect_error);
       }
 
-      if (!empty($_SESSION['username'])) {
+      // vars
+      $username = $_SESSION['username'];
+      $password = $_SESSION['password'];
+
+			if (empty($username) || empty($password)) {
+				die("Info missing.");
+			}
+
         $query = "select * from User where (Username='" . $_SESSION['username'] . "' OR Email='" . $_SESSION['username'] . "')";
 
         $result = $GLOBALS['conn']->query($query);
@@ -32,15 +35,19 @@ if (empty($_SESSION['logged_in'])) {
         if ($result->num_rows > 0) {
           while($row = $result->fetch_assoc()) { ?>
 
-            <form action="register.php" method="post" class="needs-validation" novalidate enctype="multipart/form-data">
+            <form action="update_profile.php" method="post" class="needs-validation" novalidate enctype="multipart/form-data">
               <div class="form-group d-flex justify-content-center">
-                <div class="profile-photo-container">
-                  <?php if ($row['Photo'] != '') { ?>
-                    <img src="photos/<?php echo $row['Photo']; ?>" alt="" class="profile-photo rounded-circle">
-                  <?php } else { ?>
-                    <img src="photos/user.png" alt="user" class="profile-photo rounded-circle">
-                  <?php } ?>
+								<?php
+								// if ($row['Photo'] != '') {
+								// 	$photo = "photos/" . $row['Photo'];
+								// } else {
+								// 	$photo = "photos/user.png";
+								// }
 
+								$photo = $row['Photo'] != '' ? "photos/" . $row['Photo'] : "photos/user.png";
+								?>
+
+                <div class="profile-photo" style="background-image: url('<?php echo $photo; ?>')">
                   <div class="update-photo">
                     <label>
                       Update
@@ -50,28 +57,34 @@ if (empty($_SESSION['logged_in'])) {
                 </div>
               </div>
 							<div class="form-group">
-								<label for="r_username">Username</label>
-								<input type="text" class="form-control" id="r_username" placeholder="Enter name" name="r_username" value="<?php echo $row['Username']; ?>" required>
+								<label for="username">Username</label>
+								<input type="text" class="form-control" id="username" placeholder="Enter name" name="username" value="<?php echo $row['Username']; ?>" required>
 							</div>
 							<div class="form-group">
-								<label for="r_email">Email</label>
-								<input type="email" class="form-control" id="r_email" placeholder="Enter email" name="r_email" value="<?php echo $row['Email']; ?>" required>
+								<label for="email">Email</label>
+								<input type="email" class="form-control" id="email" placeholder="Enter email" name="email" value="<?php echo $row['Email']; ?>" required>
 							</div>
 							<div class="form-group">
-								<label for="r_pass">Password</label>
-								<input type="password" class="form-control" id="r_pass" placeholder="Enter new password" name="r_pass" required>
-								<p class="mt-2 text-info show-pass" onclick="showPassword(r_pass);">Show password</p>
+								<label for="pass">Current Password</label>
+								<input type="password" class="form-control" id="pass" placeholder="Enter current password" name="pass" required>
+								<p class="mt-2 text-info show-pass">Show password</p>
+							</div>
+							<div class="form-group">
+								<label for="new_pass">New Password</label>
+								<input type="password" class="form-control" id="new_pass" placeholder="Enter new password" name="new_pass" required>
+								<p class="mt-2 text-info show-pass">Show password</p>
 							</div>
               <div class="form-group">
-                <label for="r_pass_2">Confirm Password</label>
-                <input type="password" class="form-control" id="r_pass_2" placeholder="Confirm password" name="r_pass_2" required>
-                <p class="mt-2 text-info show-pass" onclick="showPassword(r_pass_2);">Show password</p>
+                <label for="new_pass_2">Confirm Password</label>
+                <input type="password" class="form-control" id="new_pass_2" placeholder="Confirm password" name="new_pass_2" required>
+                <p class="mt-2 text-info show-pass">Show password</p>
               </div>
 							<div class="form-group">
-								<label for="r_date">Date of Birth</label>
-								<input type="date" class="form-control" id="r_date" placeholder="Enter date" name="r_dateofbirth" value="<?php echo $row['DateOfBirth']; ?>" required>
+								<label for="dateofbirth">Date of Birth</label>
+								<input type="date" class="form-control" id="dateofbirth" placeholder="Enter date" name="dateofbirth" value="<?php echo $row['DateOfBirth']; ?>" required>
 							</div>
 
+							<input type="hidden" name="r_id" value="<?php echo $row['ID']; ?>">
 							<button type="submit" class="btn btn-warning mx-auto d-block mt-4" name="update">Update</button>
 						</form>
 
@@ -80,10 +93,6 @@ if (empty($_SESSION['logged_in'])) {
         } else {
           echo 'No Info found.';
         }
-
-      } else {
-        echo "<strong>Info missing!</strong>";
-      }
       ?>
     </div>
   </div>

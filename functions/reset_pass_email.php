@@ -1,13 +1,13 @@
 <?php
-  function sendVerificationEmail($email,$hash) {
+  function resetPasswordEmail($email,$resetPasswordHash) {
     //echo $email . ' ' . $hash;
 
     $to = $email;
-    $subject = "Verify your account";
+    $subject = "Reset your password";
     $message = "
     <html>
     <head>
-    <title>Verify account for " . $email . "</title>
+    <title>Reset password for " . $email . "</title>
     <meta charset='utf-8'>
     <meta name='viewport' content='width=device-width, initial-scale=1, shrink-to-fit=no'>
 
@@ -34,9 +34,9 @@
     </head>
     <body>
     <div class='container'>
-    <p>Please verify your account by cicking the button below</p>
-    <a href='https://projects.anpapadakis.com/php/admin/verify_account.php?email=" . $email . "&hash=" . $hash . "'
-    class='btn'>Verify</a>
+    <p>Click the button below to reset your password.</p>
+    <a href='https://projects.anpapadakis.com/php/admin/reset_password.php?hash=" . $resetPasswordHash . "'
+    class='btn'>Reset</a>
     </div>
     </body>
     </html>";
@@ -47,10 +47,9 @@
     $headers .= "From: <webmaster@admin.com>";
 
     if(mail($to,$subject,$message,$headers)) {
-      echo "A verification email has been sent to <b>" . $email . "</b>. Please verify your account.<br>" ;
-      echo "Go to <a href='index.php'>login page</a>";
+      echo "An email has been sent to <b>" . $email . "</b> in order to reset your password.<br>" ;
     } else {
-      echo "Verification email has not been sent. Please contact admin.";
+      echo "Email has not been sent. Please contact admin.";
     }
   }
 ?>

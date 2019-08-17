@@ -1,0 +1,43 @@
+@mixin reset() {
+  background: #fff;
+  color: #000;
+  text-shadow: none;
+  height: auto;
+  width: auto;
+  padding: 0;
+  line-height: normal;
+  border: 0;
+  box-shadow: none;
+  border-radius: 0;
+  font-family: sans-serif;
+  font-size: 14px;
+}
+
+.calendar {
+  &, select, table, th, td {
+    @include reset();
+  }
+
+  position: absolute;
+  border: 1px solid #c0c0c0;
+  text-align: center;
+
+  select {
+    margin: 3px 5px;
+    border: 1px solid #c0c0c0;
+  }
+
+  th, td {
+    width: 14%;
+    padding: 4px;
+    text-align: center;
+  }
+
+  td {
+    cursor: pointer;
+  }
+
+  .selected {
+    font-weight: bold;
+  }
+}

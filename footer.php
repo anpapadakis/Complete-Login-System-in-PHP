@@ -1,31 +1,33 @@
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
-
+<script src="polyfill/html5-simple-date-input-polyfill.min.js"></script>
 <script>
 $("#registerBtn").click(function(){
 	if ($("#resetPassword").hasClass("show")) {
-		$("#hideResetBtn").click();
+		$("#resetBtn").click();
 	}
 });
 
 $("#resetBtn").click(function(){
 	if ($("#register").hasClass("show")) {
-		$("#hideRegisterBtn").click();
+		$("#registerBtn").click();
 	}
 });
 
-function showPassword(id) {
-  var r_pass = id;
+// Show/Hide password
+$('.show-pass').click(function() {
+	var label = $(this);
+	var pass_field = $(this).siblings('input');
 
-  if (r_pass.value.length > 0) {
-    if(r_pass.type === "password") {
-      r_pass.type = "text";
-    } else {
-      r_pass.type = "password";
-    }
-  }
-}
+	if ($(pass_field).attr('type') === "password") {
+		$(pass_field).attr('type','text');
+		$(label).text('Hide password');
+	} else {
+		$(pass_field).attr('type','password');
+		$(label).text('Show password');
+	}
+});
 
 
 (function() {
