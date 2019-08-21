@@ -34,7 +34,6 @@
   background: rgba(0,0,0,0.6);
   padding: 2px 0 8px;
   color: #fff;
-  transition: opacity 0.2s;
   visibility: hidden;
   opacity: 0;
   cursor: pointer;
@@ -60,7 +59,16 @@
   cursor: pointer;
 }
 
+::-webkit-file-upload-button {
+  cursor:pointer;
+}
+
 .show-pass {
   font-size: 13px;
   cursor: pointer;
+}
+
+#photoUploaded {
+  display: none;
+  font-size: 13px;
 }

@@ -1,6 +1,8 @@
 <?php
 session_start();
 
+include 'inc/functions.php';
+
 if (!empty($_SESSION['logged_in']) && $_SESSION['logged_in'] == true) {
 	header('Location: account.php');
 }
@@ -78,7 +80,7 @@ if (isset($_GET['action'])) {
 
 							<div class="form-group">
 								<label for="r_photo">Photo</label>
-								<input type="file" id="r_photo" name="r_photo" class="w-100">
+								<input type="file" id="r_photo" name="r_photo" class="w-100" accept=".jpg, .jpeg, .png">
 							</div>
 
 							<button type="submit" class="btn btn-warning mx-auto d-block" name="register">Register</button>
@@ -113,14 +115,6 @@ if (isset($_GET['action'])) {
 
 			<?php
 			if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
-				include 'functions/db.php';
-				$conn = dbConnection();
-
-				// Check connection
-				if ($conn->connect_error) {
-					die("Connection failed: " . $conn->connect_error);
-				}
-
 				// vars
 				$username = $password = "";
 
@@ -141,45 +135,7 @@ if (isset($_GET['action'])) {
 				$_SESSION['password'] = $password;
 
 				// Login with username/email and password
-				function login() {
-					$query = "select Password,Verified from User where (Username='" . $_SESSION['username'] . "' OR Email='" . $_SESSION['username'] . "')";
-					$result = $GLOBALS['conn']->query($query);
-
-					// If user exists in database
-					if ($result->num_rows > 0) {
-						$_SESSION['user_exists'] = true;
-
-						// Validate password
-						while($row = $result->fetch_assoc()) {
-							if(password_verify($_SESSION['password'], $row['Password'])) {
-								$_SESSION['password_validation'] = true;
-
-								if ($row['Verified'] == 1) {
-									$_SESSION['logged_in'] = true;
-									$_SESSION['verified_user'] = true;
-									echo "<script> window.location.href='account.php' </script>";
-								} else {
-									$_SESSION['verified_user'] = false;
-
-									echo "User is not verified. Please verify your account. <br>";
-									echo "<a href='verify_account.php?action=sendVerificationEmail&user=" . $_SESSION['username'] ."'>Send verification email.</a>";
-								}
-
-							} else {
-								$_SESSION['logged_in'] = false;
-								$_SESSION['password_validation'] = false;
-
-								echo 'Wrong password. Please try again or <a id="resetBtn" class="btn-link" data-toggle="collapse" href="#resetPassword" role="button" aria-expanded="false" aria-controls="resetPassword">reset your password</a>';
-							}
-						}
-					} else {
-						$_SESSION['user_exists'] = false;
-						echo 'User does not exist. Please <a id="registerBtn" class="btn-link" data-toggle="collapse" href="#register" role="button" aria-expanded="false" aria-controls="register">register</a>';
-					}
-				}
-
 				login();
-				$conn->close();
 			}
 			?>
 

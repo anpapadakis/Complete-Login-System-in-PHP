@@ -13,7 +13,7 @@ if (!empty($_SESSION['logged_in']) && $_SESSION['logged_in'] == true) {
       <div class="col text-center">
 
         <?php
-          include_once 'functions/db.php';
+          include_once 'inc/db.php';
           $conn = dbConnection();
 
 					// Check connection
@@ -36,7 +36,7 @@ if (!empty($_SESSION['logged_in']) && $_SESSION['logged_in'] == true) {
                   $stmt->bind_result($Email,$VerificationCode);
                   $stmt->fetch();
 
-                  include_once 'functions/email.php';
+                  include_once 'inc/email.php';
                   sendVerificationEmail($Email,$VerificationCode);
                 } else {
                   echo "User " . $user . " does not exist.";

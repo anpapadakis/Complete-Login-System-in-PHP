@@ -29,6 +29,14 @@ $('.show-pass').click(function() {
 	}
 });
 
+$('#updatePhoto').change(function() {
+	if ($(this).get(0).files.length > 0) {
+		$('#photoUploaded').show();
+	} else {
+		$('#photoUploaded').hide();
+	}
+});
+
 
 (function() {
 	'use strict';

@@ -23,7 +23,7 @@
     <div class="col text-center">
 
       <?php
-      include_once 'functions/db.php';
+      include_once 'inc/db.php';
       $conn = dbConnection();
 
       // Check connection

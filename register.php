@@ -17,13 +17,14 @@ if (!isset($_POST['register'])) {
 		<div class="col-12 text-center">
 
 			<?php
-			include 'functions/db.php';
-			$conn = dbConnection();
-
-			// Check connection
-			if ($conn->connect_error) {
-				die("Connection failed: " . $conn->connect_error);
-			}
+			include 'inc/functions.php';
+			// include 'inc/db.php';
+			// $conn = dbConnection();
+			//
+			// // Check connection
+			// if ($conn->connect_error) {
+			// 	die("Connection failed: " . $conn->connect_error);
+			// }
 
 			// vars
 			$username = $email = $password = $password_2 = $date = "";
@@ -79,12 +80,7 @@ if (!isset($_POST['register'])) {
 				die("Passwords don't match. Please try again.<br> <a href='index.php'>Register</a>");
 			}
 
-			$today = date("Y-m-d");
-			$diff = date_diff(date_create($date), date_create($today));
-
-			if($diff->format('%y%') < 18){
-				die("<strong>You must be at least 18 years old.</strong> <br> <a href='index.php'>Register</a>");
-			}
+			validateDateOfBirth($date);
 			/* Finish validations */
 
 
@@ -92,55 +88,32 @@ if (!isset($_POST['register'])) {
 			$verification_code = md5(rand(0,1000));
 
 			// Check if user exists already
-			if (userExists()) {
-				echo "<strong>User already exists.</strong><br>";
-				echo "<a href='/php/admin'>Go back to login</a>";
+			if (userExists($username, $email)) {
+				die("<p>User already exists.</p> <a href='index.php'>Go back to login</a>");
+			}
+
+			// Register user if does not exist
+			$query = "insert into User (Username,Email,Password,DateOfBirth,Photo,VerificationCode) values (?,?,?,?,?,?)";
+			$stmt = $conn->prepare($query);
+			$stmt->bind_param("ssssss",$username,$email,$password,$date,$photo,$verification_code);
+
+			$password = password_hash($password,PASSWORD_BCRYPT);
+
+			if ($stmt->execute()) {
+				$stmt->store_result();
+
+				if ($stmt->affected_rows > 0) {
+					echo "<strong>You have been registered successfully!</strong><br>";
+
+					include 'inc/email.php';
+					sendVerificationEmail($email,$verification_code);
+				}
+
 			} else {
-				$query = "insert into User (Username,Email,Password,DateOfBirth,Photo,VerificationCode) values (?,?,?,?,?,?)";
-				$stmt = $conn->prepare($query);
-				$stmt->bind_param("ssssss",$username,$email,$password,$date,$photo,$verification_code);
-
-				$password = password_hash($password,PASSWORD_BCRYPT);
-
-				if($stmt->execute()) {
-					$stmt->store_result();
-
-					if($stmt->affected_rows > 0) {
-						echo "<strong>Registration success!</strong><br>";
-
-						include 'functions/email.php';
-						sendVerificationEmail($email,$verification_code);
-					}
-
-				} else {
-					echo "Error in insert query: <i>" . $stmt->error . "</i>";
-				}
-
-				$stmt->close();
+				echo "Error in insert query: <i>" . $stmt->error . "</i>";
 			}
 
-			function userExists() {
-				$stmt = $GLOBALS['conn']->prepare("select * from User where Username=? or Email=?");
-				$stmt->bind_param("ss",$username,$email);
-
-				$username = $GLOBALS['username'];
-				$email = $GLOBALS['email'];
-
-				if($stmt->execute()) {
-					$stmt->store_result();
-
-					if ($stmt->num_rows > 0) {
-						return true;
-					} else {
-						return false;
-					}
-				} else {
-					echo "Error in select query: <i>" . $stmt->error . "</i>";
-				}
-
-				$stmt->close();
-			}
-
+			$stmt->close();
 			$conn->close();
 
 			?>

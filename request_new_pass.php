@@ -5,7 +5,7 @@
     <div class="col-12 text-center">
 
       <?php
-      include_once 'functions/db.php';
+      include_once 'inc/db.php';
       $conn = dbConnection();
 
       // Check connection
@@ -30,7 +30,7 @@
             $stmt->get_result();
 
             if ($stmt->affected_rows > 0) {
-              include 'functions/reset_pass_email.php';
+              include 'inc/reset_pass_email.php';
               resetPasswordEmail($email,$resetPasswordHash);
 
             } else {
@@ -54,7 +54,7 @@
           //
           //   if ($result->num_rows > 0) {
           //     while ($myrow = $result->fetch_assoc()) {
-          //       include_once 'functions/email.php';
+          //       include_once 'inc/email.php';
           //       sendVerificationEmail($email,$myrow['VerificationCode']);
           //     }
           //   } else {
@@ -65,7 +65,7 @@
           //   echo "Error in sql query: <i>" . $stmt->error . "</i>";
           // }
         }
-      } 
+      }
 
       $conn->close();
 
