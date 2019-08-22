@@ -5,7 +5,7 @@
     <div class="col-12 text-center">
 
       <?php
-      include_once 'inc/db.php';
+      require_once 'inc/db.php';
       $conn = dbConnection();
 
       // Check connection
@@ -13,62 +13,37 @@
         die("Connection failed: " . $conn->connect_error);
       }
 
-      if (isset($_POST['reset'])) {
-        if (isset($_POST['reset_email'])) {
-          if (empty($_POST['reset_email'])) {
-            die("Email is missing.");
-          }
+      if ( isset($_POST['reset']) && isset($_POST['reset_email']) ) {
 
-          $query = "update User set ResetPasswordHash = ? where Email = ?";
-          $stmt = $GLOBALS['conn']->prepare($query);
+        if (empty($_POST['reset_email'])) {
+          die("Email is missing.");
+        }
 
-          $stmt->bind_param('ss',$resetPasswordHash,$email);
-          $email = $_POST['reset_email'];
-          $resetPasswordHash = md5(rand(0,1000));
+        $query = "update User set ResetPasswordHash = ? where Email = ?";
+        $stmt = $GLOBALS['conn']->prepare($query);
 
-          if ($stmt->execute()) {
-            $stmt->get_result();
+        $stmt->bind_param('ss',$resetPasswordHash,$email);
+        $email = $_POST['reset_email'];
+        $resetPasswordHash = md5(rand(0,1000));
 
-            if ($stmt->affected_rows > 0) {
-              include 'inc/reset_pass_email.php';
-              resetPasswordEmail($email,$resetPasswordHash);
+        if ($stmt->execute()) {
+          $stmt->get_result();
 
-            } else {
-              echo "The email <b>" . $email . "</b> does not exist in the database.";
-            }
+          if ($stmt->affected_rows > 0) {
+            include 'inc/reset_pass_email.php';
+            resetPasswordEmail($email,$resetPasswordHash);
 
           } else {
-            echo "Error in sql query: <i>" . $stmt->error . "</i>";
+            echo "The email <b>" . $email . "</b> does not exist in the database.";
           }
 
-
-
-          // $query = "update user set Password = ? where Email = ?";
-          // $stmt = $conn->prepare($query);
-          //
-          // $stmt->bind_param('s',$email);
-          // $email = $_POST['reset_email'];
-          //
-          // if ($stmt->execute()) {
-          //   $result = $stmt->get_result();
-          //
-          //   if ($result->num_rows > 0) {
-          //     while ($myrow = $result->fetch_assoc()) {
-          //       include_once 'inc/email.php';
-          //       sendVerificationEmail($email,$myrow['VerificationCode']);
-          //     }
-          //   } else {
-          //     echo "The email <b>" . $email . "</b> does not exist in the database.";
-          //   }
-          //
-          // } else {
-          //   echo "Error in sql query: <i>" . $stmt->error . "</i>";
-          // }
+        } else {
+          echo "Error in sql query: <i>" . $stmt->error . "</i>";
         }
       }
 
+      $stmt->close();
       $conn->close();
-
       ?>
     </div>
   </div>

@@ -48,6 +48,7 @@
 
     if(mail($to,$subject,$message,$headers)) {
       echo "An email has been sent to <b>" . $email . "</b> in order to reset your password.<br>" ;
+      echo "<a href='index.php'>Login</a>";
     } else {
       echo "Email has not been sent. Please contact admin.";
     }

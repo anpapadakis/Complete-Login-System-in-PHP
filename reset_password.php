@@ -23,7 +23,7 @@
     <div class="col text-center">
 
       <?php
-      include_once 'inc/db.php';
+      require_once 'inc/db.php';
       $conn = dbConnection();
 
       // Check connection
@@ -32,15 +32,13 @@
       }
 
       // Get hash code from email link
-      if (isset($_GET['hash'])) {
+      if ( isset($_GET['hash']) && !empty($_GET['hash']) ) {
         $_SESSION['hash'] = $_GET['hash'];
+      } else {
+        die("Hash is missing.");
       }
 
       if (isset($_POST['submit'])) {
-        if (empty($_SESSION['hash'])) {
-          die("Hash is missing.");
-        }
-
         if (empty($_POST['mypass']) || empty($_POST['mypass2'])) {
           die("Info missing!");
         }
@@ -51,7 +49,6 @@
         if ($password != $password_2) {
           die("Passwords don't match. Please try again.");
         }
-
 
         // Get email from database according to hash code
         $first_query = "select Email from User where ResetPasswordHash = ? limit 1";

@@ -59,11 +59,16 @@ function login() {
 }
 
 function userExists($username,$email) {
-  $stmt = $GLOBALS['conn']->prepare("select * from User where Username=? or Email=?");
-  $stmt->bind_param("ss",$username,$email);
+  if ($username != null) {
+    // Function called from register.php
+    $stmt = $GLOBALS['conn']->prepare("select ID from User where Username=? or Email=?");
+    $stmt->bind_param("ss",$username,$email);
 
-  $username = $GLOBALS['username'];
-  $email = $GLOBALS['email'];
+  } else {
+    // Function called from verify_account.php
+    $stmt = $GLOBALS['conn']->prepare("select ID from User where Email=?");
+    $stmt->bind_param("s",$email);
+  }
 
   if($stmt->execute()) {
     $stmt->store_result();
@@ -133,6 +138,36 @@ function validateDateOfBirth($date) {
   if ($diff->format('%y%') < 18) {
     die("<strong>Your age must be at least 18 years old.</strong> <br> <a href='index.php'>Register</a>");
   }
+}
+
+function userVerified($email) {
+  $stmt = $GLOBALS['conn']->prepare("select Verified from User where Email = ?");
+  $stmt->bind_param("s",$email);
+
+  if ($stmt->execute()) {
+    $stmt->store_result();
+
+    if ($stmt->affected_rows > 0) {
+      $user_exists = true;
+
+      $stmt->bind_result($Verified);
+
+      while ($stmt->fetch()) {
+        if ($Verified == 0) {
+          $is_verified = false;
+        } else {
+          $is_verified = true;
+        }
+      }
+    }
+
+    return $is_verified;
+  } else {
+    echo "Error in sql query: <i>" . $stmt->error . "</i>";
+  }
+
+  $stmt->close();
+  $GLOBALS['conn']->close();
 }
 
 ?>
