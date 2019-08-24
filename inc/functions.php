@@ -1,7 +1,7 @@
 <?php
 //session_start();
 
-include 'db.php';
+require 'db.php';
 $conn = dbConnection();
 
 // Check connection
@@ -114,7 +114,7 @@ function checkCurrentPassword($username,$email,$password) {
 }
 
 function uploadPhoto() {
-  $photos_path = "photos/";
+  $photos_path = dirname( dirname(__FILE__) ) . '/photos' . '/';
   // $photo = addslashes(file_get_contents($_FILES['r_photo']['name']));
   $photo = $_FILES['photo']['name'];
 
@@ -131,12 +131,18 @@ function uploadPhoto() {
   }
 }
 
-function validateDateOfBirth($date) {
+function validateDateOfBirth($date,$action) {
   $today = date("Y-m-d");
   $diff = date_diff(date_create($date), date_create($today));
 
   if ($diff->format('%y%') < 18) {
-    die("<strong>Your age must be at least 18 years old.</strong> <br> <a href='index.php'>Register</a>");
+    if ($action == 'update') {
+      $url = "<a href='account.php'>Account</a>";
+    } else {
+      $url = "<a href='index.php'>Register</a>";
+    }
+
+    die("<div class='text-center'><p>Your age must be at least 18 years old.</p> " . $url . "</div>");
   }
 }
 

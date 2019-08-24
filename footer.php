@@ -37,6 +37,10 @@ $('#updatePhoto').change(function() {
 	}
 });
 
+$('.profile-photo').click(function() {
+	$('.update-photo').toggle();
+});
+
 
 (function() {
 	'use strict';

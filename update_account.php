@@ -69,16 +69,14 @@ require_once 'inc/functions.php';
           // $photo = $_FILES['r_photo']['tmp_name'];
 
           if(move_uploaded_file($_FILES['photo']['tmp_name'],$photos_path)) {
-            //echo "moved";
             $photo_saved = 1;
           } else {
-            //echo "not moved";
             $photo_saved = 0;
           }
         } else {
           // default photo will be assigned
           $photo = "";
-          $photo_saved = 1;
+          $photo_saved = 0;
         }
 
         if (isset($_POST['id'])) {
@@ -110,32 +108,58 @@ require_once 'inc/functions.php';
           }
         }
 
-
-        $today = date("Y-m-d");
-        $diff = date_diff(date_create($date), date_create($today));
-
-        if($diff->format('%y%') < 18){
-          die("<strong>You must be at least 18 years old.</strong> <br> <a href='index.php'>Register</a>");
-        }
+        validateDateOfBirth($date,'update');
+        //
+        // $today = date("Y-m-d");
+        // $diff = date_diff(date_create($date), date_create($today));
+        //
+        // if($diff->format('%y%') < 18){
+        //   die("<strong>You must be at least 18 years old.</strong>");
+        // }
         /* Finish validations */
 
-        if (!empty($password)) {
-          $query = "update User set Username=?,Email=?,Password=?,DateOfBirth=?,Photo=? where ID=?";
-          $stmt = $conn->prepare($query);
-          $stmt->bind_param("sssssi",$username,$email,$password,$date,$photo,$id);
-          $password = password_hash($password,PASSWORD_BCRYPT);
-        } else {
-          $query = "update User set Username=?,Email=?,DateOfBirth=?,Photo=? where ID=?";
-          $stmt = $conn->prepare($query);
-          $stmt->bind_param("ssssi",$username,$email,$date,$photo,$id);
-        }
+        // if (!empty($password)) {
+        //   $query = "update User set Username=?,Email=?,Password=?,DateOfBirth=?,Photo=? where ID=?";
+        //   $stmt = $conn->prepare($query);
+        //   $stmt->bind_param("sssssi",$username,$email,$password,$date,$photo,$id);
+        //   $password = password_hash($password,PASSWORD_BCRYPT);
+        // } else {
+        //   $query = "update User set Username=?,Email=?,DateOfBirth=?,Photo=? where ID=?";
+        //   $stmt = $conn->prepare($query);
+        //   $stmt->bind_param("ssssi",$username,$email,$date,$photo,$id);
+        //   $id = $id+1;
+        // }
 
         // $query = "update User set Username=?,Email=?,DateOfBirth=?,Photo=? where ID=?";
         // $stmt = $conn->prepare($query);
         // $stmt->bind_param("ssssi",$username,$email,$date,$photo,$id);
 
+        $query = "update User set Username=?,Email=?,DateOfBirth=?";
+        $params_types = 'sss';
+        $params_values = array($username,$email,$date);
+
+        if (!empty($password)) {
+          $query .= ",Password=?";
+          $params_types .= 's';
+          array_push($params_values, $password);
+        }
+
+        if ($photo_saved) {
+          $query .= ",Photo=?";
+          $params_types .= 's';
+          array_push($params_values, $photo);
+        }
+
+        $query .= " where ID=?";
+        $params_types .= 'i';
+        array_push($params_values, $id);
+
+        $stmt = $conn->prepare($query);
+        $stmt->bind_param($params_types, ...$params_values);
+
         if ($stmt->execute()) {
-          $stmt->store_result();
+          //$stmt->store_result();
+          $stmt->get_result();
 
           if ($stmt->affected_rows > 0) {
             $_SESSION['username'] = $username;
@@ -149,6 +173,9 @@ require_once 'inc/functions.php';
         }
 
       }
+
+      $stmt->close();
+      $conn->close();
       ?>
     </div>
   </div>

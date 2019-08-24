@@ -80,7 +80,7 @@ if (!isset($_POST['register'])) {
 				die("Passwords don't match. Please try again.<br> <a href='index.php'>Register</a>");
 			}
 
-			validateDateOfBirth($date);
+			validateDateOfBirth($date,'register');
 			/* Finish validations */
 
 

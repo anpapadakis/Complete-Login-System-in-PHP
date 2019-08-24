@@ -27,7 +27,7 @@ if (empty($_SESSION['logged_in'])) {
 		<?php
 		} ?>
 
-		<div class="col-12 col-md-6 col-lg-4">
+		<div class="col-12 col-sm-8 col-md-6 col-lg-4">
 			<?php
 			require_once 'inc/db.php';
 			$conn = dbConnection();
