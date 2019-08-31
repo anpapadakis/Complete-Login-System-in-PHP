@@ -9,7 +9,8 @@ if (!empty($_SESSION['logged_in']) && $_SESSION['logged_in'] == true) {
 
 if (isset($_GET['action'])) {
 	if ($_GET['action'] == 'logout') {
-		$_SESSION['logged_in'] = false;
+		session_unset();
+		session_destroy();
 	}
 }
 ?>
@@ -114,6 +115,12 @@ if (isset($_GET['action'])) {
 		<div class="col text-center">
 
 			<?php
+
+			if (isset($_GET['delete_account']) && $_GET['delete_account'] == 'success') {
+				echo "Your account has been deleted.";
+			}
+
+
 			if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
 				// vars
 				$username = $password = "";

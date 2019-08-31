@@ -48,7 +48,7 @@
 
     if(mail($to,$subject,$message,$headers)) {
       echo "A verification email has been sent to <b>" . $email . "</b>. Please verify your account.<br>" ;
-      echo "Go to <a href='index.php'>login page</a>";
+      // echo "Go to <a href='index.php'>login page</a>";
     } else {
       echo "Verification email has not been sent. Please contact admin.";
     }

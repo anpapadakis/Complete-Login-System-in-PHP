@@ -18,15 +18,7 @@ if (!isset($_POST['register'])) {
 
 			<?php
 			include 'inc/functions.php';
-			// include 'inc/db.php';
-			// $conn = dbConnection();
-			//
-			// // Check connection
-			// if ($conn->connect_error) {
-			// 	die("Connection failed: " . $conn->connect_error);
-			// }
 
-			// vars
 			$username = $email = $password = $password_2 = $date = "";
 			$photos_path = "photos/";
 
@@ -51,24 +43,18 @@ if (!isset($_POST['register'])) {
 			}
 
 			if (isset($_FILES['r_photo']) && $_FILES['r_photo']['size'] > 0) {
-				// $photo = addslashes(file_get_contents($_FILES['r_photo']['name']));
-				$photo = $_FILES['r_photo']['name'];
-
-				$photos_path .= $_FILES['r_photo']['name'];
-
-				// $photo = $_FILES['r_photo']['tmp_name'];
-
-				if(move_uploaded_file($_FILES['r_photo']['tmp_name'],$photos_path)) {
-					//echo "moved";
+				if (uploadPhoto($_FILES['r_photo'])) {
 					$photo_saved = 1;
+					$photo = $_FILES['r_photo']['name'];
+
 				} else {
-					//echo "not moved";
 					$photo_saved = 0;
 				}
+
 			} else {
 				// default photo will be assigned
 				$photo = "";
-				$photo_saved = 1;
+				$photo_saved = 0;
 			}
 
 			/* Start validations */

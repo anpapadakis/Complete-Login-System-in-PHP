@@ -113,21 +113,18 @@ function checkCurrentPassword($username,$email,$password) {
   $GLOBALS['conn']->close();
 }
 
-function uploadPhoto() {
+function uploadPhoto($photo) {
   $photos_path = dirname( dirname(__FILE__) ) . '/photos' . '/';
-  // $photo = addslashes(file_get_contents($_FILES['r_photo']['name']));
-  $photo = $_FILES['photo']['name'];
+  $photo_name = $photo['name'];
 
-  $photos_path .= $_FILES['photo']['name'];
+  $photos_path .= $photo_name;
 
-  // $photo = $_FILES['r_photo']['tmp_name'];
+  $photo_temp_name = $photo['tmp_name'];
 
-  if (move_uploaded_file($_FILES['photo']['tmp_name'], $photos_path)) {
-    //echo "moved";
-    $photo_saved = 1;
+  if (move_uploaded_file($photo_temp_name, $photos_path)) {
+    return 1;
   } else {
-    //echo "not moved";
-    $photo_saved = 0;
+    return 0;
   }
 }
 

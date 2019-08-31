@@ -1,12 +1,5 @@
 <?php
 session_start();
-// error_reporting(E_ALL | E_STRICT);
-// ini_set('display_errors', 1);
-// ini_set('log_errors', 1);
-// ini_set('log_errors_max_len', 0);
-// ini_set('error_log', 'errors.log');
-
-
 
 if (empty($_SESSION['logged_in'])) {
   header('Location: index.php');
@@ -19,7 +12,7 @@ require_once 'inc/functions.php';
 
 <div class="container py-5">
   <div class="row justify-content-center">
-    <div class="col-12 col-md-6 col-lg-4">
+    <div class="col-12 col-md-6 col-lg-4 text-center">
       <?php
       include_once 'inc/db.php';
       $conn = dbConnection();
@@ -29,8 +22,29 @@ require_once 'inc/functions.php';
         die("Connection failed: " . $conn->connect_error);
       }
 
-      if (isset($_POST['submit'])) {
-        // vars
+      // Delete account
+      if (isset($_POST['delete'])) {
+        if (isset($_POST['id'])) {
+          $id = intval($_POST['id']);
+        }
+
+        $query = "delete from User where ID=?";
+        $stmt = $conn->prepare($query);
+        $stmt->bind_param('i', $id);
+        $stmt->execute();
+        $stmt->get_result();
+
+        if ($stmt->affected_rows > 0) {
+          session_unset();
+          session_destroy();
+
+          header("Location: index.php?delete_account=success");
+          die;
+        }
+      }
+
+      // Update account
+      if (isset($_POST['update'])) {
         $username = $email = $password = $password_2 = $date = "";
         $photos_path = "photos/";
 
@@ -59,17 +73,10 @@ require_once 'inc/functions.php';
         }
 
         if (isset($_FILES['photo']) && $_FILES['photo']['size'] > 0) {
-          // uploadPhoto();
-          $photos_path = "photos/";
-          // $photo = addslashes(file_get_contents($_FILES['r_photo']['name']));
-          $photo = $_FILES['photo']['name'];
-
-          $photos_path .= $_FILES['photo']['name'];
-
-          // $photo = $_FILES['r_photo']['tmp_name'];
-
-          if(move_uploaded_file($_FILES['photo']['tmp_name'],$photos_path)) {
+          if (uploadPhoto($_FILES['photo'])) {
             $photo_saved = 1;
+            $photo = $_FILES['photo']['name'];
+
           } else {
             $photo_saved = 0;
           }
@@ -97,8 +104,7 @@ require_once 'inc/functions.php';
               }
 
               if (!checkCurrentPassword($username,$email,$current_password)) {
-                header("Location: account.php?result=wrong_pass");
-                exit();
+                die("Your current password is wrong. <br> <a href='account.php'>Account</a>");
               }
             } else {
               die("Please enter the new password. <br> <a href='account.php'>Account</a>");
@@ -109,31 +115,24 @@ require_once 'inc/functions.php';
         }
 
         validateDateOfBirth($date,'update');
-        //
-        // $today = date("Y-m-d");
-        // $diff = date_diff(date_create($date), date_create($today));
-        //
-        // if($diff->format('%y%') < 18){
-        //   die("<strong>You must be at least 18 years old.</strong>");
-        // }
-        /* Finish validations */
 
-        // if (!empty($password)) {
-        //   $query = "update User set Username=?,Email=?,Password=?,DateOfBirth=?,Photo=? where ID=?";
-        //   $stmt = $conn->prepare($query);
-        //   $stmt->bind_param("sssssi",$username,$email,$password,$date,$photo,$id);
-        //   $password = password_hash($password,PASSWORD_BCRYPT);
-        // } else {
-        //   $query = "update User set Username=?,Email=?,DateOfBirth=?,Photo=? where ID=?";
-        //   $stmt = $conn->prepare($query);
-        //   $stmt->bind_param("ssssi",$username,$email,$date,$photo,$id);
-        //   $id = $id+1;
-        // }
+        // Check for changes
+        if (empty($password) && !$photo_saved) {
+          $query = "select ID from User where Username=? and Email=? and DateOfBirth=?";
+          $stmt = $conn->prepare($query);
+          $stmt->bind_param('sss',$username,$email,$date);
+          $stmt->execute();
+          $stmt->get_result();
 
-        // $query = "update User set Username=?,Email=?,DateOfBirth=?,Photo=? where ID=?";
-        // $stmt = $conn->prepare($query);
-        // $stmt->bind_param("ssssi",$username,$email,$date,$photo,$id);
+          if ($stmt->affected_rows > 0) {
+            $_SESSION['username'] = $username;
+            $_SESSION['email'] = $email;
+            header("Location: account.php?result=success");
+            exit;
+          }
+        }
 
+        // Update account
         $query = "update User set Username=?,Email=?,DateOfBirth=?";
         $params_types = 'sss';
         $params_values = array($username,$email,$date);
@@ -141,6 +140,7 @@ require_once 'inc/functions.php';
         if (!empty($password)) {
           $query .= ",Password=?";
           $params_types .= 's';
+          $password = password_hash($password,PASSWORD_BCRYPT);
           array_push($params_values, $password);
         }
 
@@ -158,7 +158,6 @@ require_once 'inc/functions.php';
         $stmt->bind_param($params_types, ...$params_values);
 
         if ($stmt->execute()) {
-          //$stmt->store_result();
           $stmt->get_result();
 
           if ($stmt->affected_rows > 0) {

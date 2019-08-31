@@ -20,9 +20,7 @@ if (empty($_SESSION['logged_in'])) {
 				} else if ($_GET['result'] == "fail") { ?>
 					<p class="text-danger">Update failed.</p>
 				<?php
-				} else if ($_GET['result'] == "wrong_pass") { ?>
-					<p class="text-danger">Update failed. Your current password is wrong.</p>
-				<?php	} ?>
+				} ?>
 			</div>
 		<?php
 		} ?>
@@ -69,40 +67,57 @@ if (empty($_SESSION['logged_in'])) {
 									</div>
 								</div>
 
-								<div id="photoUploaded" class="py-2 text-info">
+								<div id="photoUploaded" class="py-2 text-success">
 									Photo uploaded
 								</div>
 							</div>
+
 							<div class="form-group">
 								<label for="username">Username</label>
 								<input type="text" class="form-control" id="username" placeholder="Enter name" name="username" value="<?php echo $row['Username']; ?>" required>
 							</div>
+
 							<div class="form-group">
 								<label for="email">Email</label>
 								<input type="email" class="form-control" id="email" placeholder="Enter email" name="email" value="<?php echo $row['Email']; ?>" required>
 							</div>
+
 							<div class="form-group">
 								<label for="pass">Current Password</label>
 								<input type="password" class="form-control" id="pass" placeholder="Enter current password" name="pass">
 								<p class="mt-2 text-info show-pass">Show password</p>
 							</div>
+
 							<div class="form-group">
 								<label for="new_pass">New Password</label>
 								<input type="password" class="form-control" id="new_pass" placeholder="Enter new password" name="new_pass">
 								<p class="mt-2 text-info show-pass">Show password</p>
 							</div>
+
 							<div class="form-group">
 								<label for="new_pass_2">Confirm Password</label>
 								<input type="password" class="form-control" id="new_pass_2" placeholder="Confirm password" name="new_pass_2">
 								<p class="mt-2 text-info show-pass">Show password</p>
 							</div>
+
 							<div class="form-group">
 								<label for="dateofbirth">Date of Birth</label>
 								<input type="date" class="form-control" id="dateofbirth" name="dateofbirth" value="<?php echo $row['DateOfBirth']; ?>" required>
 							</div>
 
+							<div class="form-row justify-content-center">
+								<div class="col-12 col-md-6">
+									<button type="submit" class="btn btn-warning d-block mt-4 w-100" name="update">Update</button>
+								</div>
+							</div>
+
+							<div class="form-row justify-content-center">
+								<div class="col-12 col-md-6">
+									<button id="deleteAccount" type="submit" class="btn btn-danger d-block mt-4 w-100" name="delete">Delete</button>
+								</div>
+							</div>
+
 							<input type="hidden" name="id" value="<?php echo $row['ID']; ?>">
-							<button type="submit" class="btn btn-warning mx-auto d-block mt-4" name="submit">Update</button>
 						</form>
 
 					<?php

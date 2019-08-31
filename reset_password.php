@@ -1,4 +1,10 @@
-<?php session_start(); ?>
+<?php
+session_start();
+
+if (!empty($_SESSION['logged_in']) && $_SESSION['logged_in'] == true) {
+	header('Location: account.php');
+}
+?>
 
 <?php include 'header.php'; ?>
 
@@ -31,11 +37,18 @@
         die("Connection failed: " . $conn->connect_error);
       }
 
-      // Get hash code from email link
-      if ( isset($_GET['hash']) && !empty($_GET['hash']) ) {
-        $_SESSION['hash'] = $_GET['hash'];
-      } else {
-        die("Hash is missing.");
+      if (isset($_GET['result']) && $_GET['result'] == 'success') {
+        echo "Your password has been updated!<br> <a href='index.php'>Login</a>";
+        exit;
+      }
+
+      // Get hash code from url
+      if (!isset($_POST)) {
+        if ( isset($_GET['hash']) && !empty($_GET['hash']) ) {
+          $_SESSION['hash'] = $_GET['hash'];
+        } else {
+          die("Hash is missing.");
+        }
       }
 
       if (isset($_POST['submit'])) {
@@ -83,7 +96,7 @@
           $stmt->get_result();
 
           if ($stmt->affected_rows > 0) {
-            echo "Your password has been updated!<br> <a href='index.php'>Login</a>";
+            header('Location: reset_password.php?result=success');
           } else {
             echo "The user does not exist in our database.";
           }

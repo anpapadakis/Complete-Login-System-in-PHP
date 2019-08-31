@@ -69,7 +69,7 @@ if (!empty($_SESSION['logged_in']) && $_SESSION['logged_in'] == true) {
             if($stmt->execute()) {
               if($stmt->affected_rows > 0) {
                 echo "<p>The email <b>" . $email . "</b> has been verified successfully.</p>";
-                echo "<p>Go to <a href='index.php'>login page</a></p>.";
+                echo "<p>Go to <a href='index.php'>login page</a></p>";
               }
             } else {
               echo "<p>Error in sql query: <i>" . $stmt->error . "</i></p>";
