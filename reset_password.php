@@ -43,7 +43,7 @@ if (!empty($_SESSION['logged_in']) && $_SESSION['logged_in'] == true) {
       }
 
       // Get hash code from url
-      if (!isset($_POST)) {
+      if (empty($_POST)) {
         if ( isset($_GET['hash']) && !empty($_GET['hash']) ) {
           $_SESSION['hash'] = $_GET['hash'];
         } else {
