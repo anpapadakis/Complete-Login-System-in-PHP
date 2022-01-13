@@ -53,4 +53,3 @@
       echo "Verification email has not been sent. Please contact admin.";
     }
   }
-?>

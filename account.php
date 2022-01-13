@@ -11,7 +11,7 @@ if (empty($_SESSION['logged_in'])) {
 <div class="container py-5">
 	<div class="row justify-content-center">
 		<?php
-		if ( isset($_GET['result']) && !empty($_GET['result'])) { ?>
+		if (isset($_GET['result']) && !empty($_GET['result'])) { ?>
 			<div class="col-12 text-center py-3">
 				<?php
 				if ($_GET['result'] == "success") { ?>
@@ -44,13 +44,13 @@ if (empty($_SESSION['logged_in'])) {
 
 			$query = "select * from User where Username=? or Email=?";
 			$stmt = $conn->prepare($query);
-			$stmt->bind_param("ss", $username,$username);
+			$stmt->bind_param("ss", $username, $username);
 
 			if ($stmt->execute()) {
 				$result = $stmt->get_result();
 
 				if ($result->num_rows > 0) {
-					while($row = $result->fetch_assoc()) { ?>
+					while ($row = $result->fetch_assoc()) { ?>
 
 						<form action="update_account.php" method="post" class="needs-validation" novalidate enctype="multipart/form-data">
 							<div class="form-group d-flex flex-column align-items-center justify-content-center">
@@ -120,13 +120,11 @@ if (empty($_SESSION['logged_in'])) {
 							<input type="hidden" name="id" value="<?php echo $row['ID']; ?>">
 						</form>
 
-					<?php
+			<?php
 					}
-
 				} else {
 					echo 'User does not exist in our database.';
 				}
-
 			} else {
 				echo "Error in sql query <br> <b>" . $stmt->error . "</b>";
 			}

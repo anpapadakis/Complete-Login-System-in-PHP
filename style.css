@@ -1,9 +1,9 @@
 .username {
-  font-size: 15px;
+    font-size: 15px;
 }
 
 .logout {
-  font-size: 14px;
+    font-size: 14px;
 }
 
 /* .profile-photo {
@@ -13,62 +13,62 @@
 } */
 
 .profile-photo {
-  position: relative;
-  display: inline-block;
-  border-radius: 50%;
-  overflow: hidden;
-  width: 130px;
-  height: 130px;
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
+    position: relative;
+    display: inline-block;
+    border-radius: 50%;
+    overflow: hidden;
+    width: 130px;
+    height: 130px;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
 }
 
 .profile-photo .update-photo {
-  position: absolute;
-  bottom: 0px;
-  font-size: 14px;
-  text-align: center;
-  left: 0;
-  right: 0;
-  background: rgba(0,0,0,0.6);
-  padding: 2px 0 8px;
-  color: #fff;
-  visibility: hidden;
-  opacity: 0;
-  cursor: pointer;
+    position: absolute;
+    bottom: 0px;
+    font-size: 14px;
+    text-align: center;
+    left: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.6);
+    padding: 2px 0 8px;
+    color: #fff;
+    visibility: hidden;
+    opacity: 0;
+    cursor: pointer;
 }
 
 .profile-photo:hover .update-photo {
-  visibility: visible;
-  opacity: 1;
+    visibility: visible;
+    opacity: 1;
 }
 
 .profile-photo .update-photo label {
-  width: 100%;
-  margin: 0;
-  cursor: pointer;
+    width: 100%;
+    margin: 0;
+    cursor: pointer;
 }
 
 .profile-photo .update-photo label input {
-  position: absolute;
-  left: 0;
-  right: 0;
-  opacity: 0;
-  width: 100%;
-  cursor: pointer;
+    position: absolute;
+    left: 0;
+    right: 0;
+    opacity: 0;
+    width: 100%;
+    cursor: pointer;
 }
 
 ::-webkit-file-upload-button {
-  cursor:pointer;
+    cursor: pointer;
 }
 
 .show-pass {
-  font-size: 13px;
-  cursor: pointer;
+    font-size: 13px;
+    cursor: pointer;
 }
 
 #photoUploaded {
-  display: none;
-  font-size: 13px;
+    display: none;
+    font-size: 13px;
 }

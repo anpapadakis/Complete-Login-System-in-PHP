@@ -46,11 +46,9 @@ if (!isset($_POST['register'])) {
 				if (uploadPhoto($_FILES['r_photo'])) {
 					$photo_saved = 1;
 					$photo = $_FILES['r_photo']['name'];
-
 				} else {
 					$photo_saved = 0;
 				}
-
 			} else {
 				// default photo will be assigned
 				$photo = "";
@@ -66,12 +64,12 @@ if (!isset($_POST['register'])) {
 				die("Passwords don't match. Please try again.<br> <a href='index.php'>Register</a>");
 			}
 
-			validateDateOfBirth($date,'register');
+			validateDateOfBirth($date, 'register');
 			/* Finish validations */
 
 
 			// Create a hash code
-			$verification_code = md5(rand(0,1000));
+			$verification_code = md5(rand(0, 1000));
 
 			// Check if user exists already
 			if (userExists($username, $email)) {
@@ -81,9 +79,9 @@ if (!isset($_POST['register'])) {
 			// Register user if does not exist
 			$query = "insert into User (Username,Email,Password,DateOfBirth,Photo,VerificationCode) values (?,?,?,?,?,?)";
 			$stmt = $conn->prepare($query);
-			$stmt->bind_param("ssssss",$username,$email,$password,$date,$photo,$verification_code);
+			$stmt->bind_param("ssssss", $username, $email, $password, $date, $photo, $verification_code);
 
-			$password = password_hash($password,PASSWORD_BCRYPT);
+			$password = password_hash($password, PASSWORD_BCRYPT);
 
 			if ($stmt->execute()) {
 				$stmt->store_result();
@@ -92,9 +90,8 @@ if (!isset($_POST['register'])) {
 					echo "<strong>You have been registered successfully!</strong><br>";
 
 					include 'inc/email.php';
-					sendVerificationEmail($email,$verification_code);
+					sendVerificationEmail($email, $verification_code);
 				}
-
 			} else {
 				echo "Error in insert query: <i>" . $stmt->error . "</i>";
 			}
