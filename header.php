@@ -1,3 +1,7 @@
+<?php
+include 'inc/constants.php';
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -15,7 +19,7 @@
 		<div class="container">
 			<div class="row">
 				<nav class="navbar navbar-expand-lg navbar-light w-100 justify-content-between">
-					<a class="navbar-brand" href="/">Admin</a>
+					<a class="navbar-brand" href="<?php echo BASE_URL; ?>">Admin</a>
 
 					<?php if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] == true) { ?>
 						<div class="d-flex flex-column align-items-center">
